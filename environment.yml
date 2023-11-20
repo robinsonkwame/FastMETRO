@@ -76,7 +76,6 @@ dependencies:
       - joblib==1.3.2
       - kiwisolver==1.4.5
       - lazy-loader==0.3
-      - manopth==0.0.1
       - matplotlib==3.7.3
       - networkx==3.1
       - nltk==3.8.1
