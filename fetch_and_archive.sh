@@ -23,6 +23,3 @@ if [ ! -d "$MODELS_DIR" ]; then
 else
     echo "Models directory already exists. Skipping download."
 fi
-
-
-
