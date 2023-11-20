@@ -15,17 +15,27 @@ ENV PATH="/miniconda3/bin:${PATH}"
 # Update conda
 RUN conda update -n base -c defaults conda
 
+# # Create a FastMETRO conda environment
+# RUN conda create --name fastmetro python=3.8
+
+COPY environment.yml environment.yml
+
 # Create a FastMETRO conda environment
-RUN conda create --name fastmetro python=3.8
+#RUN /bin/bash -c "conda create --name fastmetro --file environment.yml"
 
-# Install cudatoolkit
-RUN /bin/bash -c "source activate fastmetro && conda install --yes cudatoolkit=11.1 -c pytorch -c conda-forge"
+RUN /bin/bash -c "conda env create -f environment.yml"
+RUN /bin/bash -c "conda env update --name fastmetro --file environment.yml --prune"
 
-RUN /bin/bash -c "source activate fastmetro && conda install --yes  torchvision=0.9.0 -c pytorch -c conda-forge"
 
-RUN /bin/bash -c "source activate fastmetro && conda install --yes  pytorch=1.8.0 -c pytorch -c conda-forge"
+# # Install cudatoolkit
+# RUN /bin/bash -c "source activate fastmetro && conda install --yes cudatoolkit=11.1 -c pytorch -c conda-forge"
 
-# Clone the FastMETRO repository
+# RUN /bin/bash -c "source activate fastmetro && conda install --yes  torchvision=0.9.0 -c pytorch -c conda-forge"
+
+# RUN /bin/bash -c "source activate fastmetro && conda install --yes  pytorch=1.8.0 -c pytorch -c conda-forge"
+
+# Clone the FastMETRO repository and build it
+# note: the prior environment.yml covers the reqiurements.txt
 RUN git clone --recursive https://github.com/postech-ami/FastMETRO.git
 
 # Set the working directory to FastMETRO
@@ -34,8 +44,8 @@ WORKDIR FastMETRO
 # RUN FastMETRO setup
 RUN /bin/bash -c "source activate fastmetro && python setup.py build develop"
 
-# Install requirements
-RUN /bin/bash -c "source activate fastmetro && pip install -r requirements.txt"
+# # Install requirements
+# RUN /bin/bash -c "source activate fastmetro && pip install -r requirements.txt"
 
 # Install manopth
 RUN /bin/bash -c "source activate fastmetro && pip install ./manopth/."
