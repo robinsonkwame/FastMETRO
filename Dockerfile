@@ -33,9 +33,17 @@ RUN /bin/bash -c "source activate fastmetro && python setup.py build develop"
 # Install manopth (GPL)
 RUN /bin/bash -c "source activate fastmetro && pip install ./manopth/."
 
+# For opencv we install required libraries
+# Note: ideally we'd move this up but this saves time re-buildling this image
+ENV TZ=America/New_York
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -y \
+    libgl1 \
+    libgtk2.0-0
+
 # Build 
 # docker build -t fastmetro .
 
 # Run
-# docker run -it --rm -v {$PWD}/models:/FastMETRO/models -v {$PWD}/images:/FastMETRO/images fastmetro
+# docker run -it -v $PWD/models:/FastMETRO/models -v $PWD/images:/FastMETRO/images fastmetro bash
 

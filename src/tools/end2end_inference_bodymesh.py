@@ -30,12 +30,7 @@ import src.modeling.data.config as cfg
 from src.utils.logger import setup_logger
 from src.utils.miscellaneous import mkdir, set_seed
 from src.utils.geometric_layers import orthographic_projection, rodrigues
-from src.utils.renderer_opendr import OpenDR_Renderer, visualize_reconstruction_opendr, visualize_reconstruction_smpl_opendr
-try:
-    from src.utils.renderer_pyrender import PyRender_Renderer, visualize_reconstruction_pyrender, visualize_reconstruction_smpl_pyrender
-except:
-    print("Failed to import renderer_pyrender. Please see docs/Installation.md")
-
+from src.utils.renderer_pyrender import PyRender_Renderer, visualize_reconstruction_pyrender, visualize_reconstruction_smpl_pyrender
 
 transform = transforms.Compose([transforms.Resize(224),
                                 transforms.CenterCrop(224),
@@ -201,10 +196,7 @@ def main(args):
     mesh_sampler = Mesh()
 
     # Renderer for visualization
-    if args.use_opendr_renderer:
-        renderer = OpenDR_Renderer(faces=smpl.faces.cpu().numpy())
-    else:
-        renderer = PyRender_Renderer(faces=smpl.faces.cpu().numpy())
+    renderer = PyRender_Renderer(faces=smpl.faces.cpu().numpy())
 
     # Load pretrained model    
     logger.info("Inference: Loading from checkpoint {}".format(args.resume_checkpoint))
