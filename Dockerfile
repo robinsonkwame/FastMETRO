@@ -12,7 +12,7 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
 # For opencv we install required libraries
 ENV TZ=America/New_York
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     libgl1 \
     libgtk2.0-0
 
