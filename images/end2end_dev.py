@@ -23,7 +23,7 @@ import numpy as np
 import cv2
 from PIL import Image
 from torchvision import transforms
-from src.modeling.model import FastMETRO_Body_Network as FastMETRO_Network
+from src.modeling.model.modeling_xyz_fastmetro import FastMETRO_Body_Network as FastMETRO_Network
 from src.modeling.hrnet.hrnet_cls_net_featmaps import get_cls_net
 from src.modeling.hrnet.config import config as hrnet_config
 from src.modeling.hrnet.config import update_config as hrnet_update_config
@@ -56,9 +56,13 @@ def run_inference(args, image_list, FastMETRO_model):
             
             # forward-pass
             out = FastMETRO_model(batch_imgs)
+            # the check points don't provide access to all of the inference information as one variable
+            # so we work with the 3d joints and the coarse vertices seperately
 
+            # return these two matrices
             logger.info(
-                out['pred_3d_vertices_fine']
+                out['pred_3d_joints'].shape,
+                out['pred_3d_vertices_coarse'].shape
             )
     
     logger.info("The inference completed successfully. Finalizing run...")
@@ -128,6 +132,7 @@ def main(args):
         # if only run eval, load checkpoint
         logger.info("Evaluation: Loading from checkpoint {}".format(args.resume_checkpoint))
         _FastMETRO_Network = torch.load(args.resume_checkpoint)
+        logger.info("(... must work w pred 3d joints and 3d vertices)".format(args.resume_checkpoint))
     else:
         # init ImageNet pre-trained backbone model
         if args.arch == 'hrnet-w64':

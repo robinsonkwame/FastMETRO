@@ -3,6 +3,7 @@
 # Copyright (c) POSTECH Algorithmic Machine Intelligence Lab. (P-AMI Lab.) All Rights Reserved 
 # Licensed under the MIT license.
 # ----------------------------------------------------------------------------------------------
+#
 # This file removes use of a mesh_sampler from body mesh since we are returning xyz points only.
 #
 # ----------------------------------------------------------------------------------------------
@@ -78,8 +79,10 @@ class FastMETRO_Body_Network(nn.Module):
 
         # attention mask
         zeros_1 = torch.tensor(np.zeros((num_vertices, num_joints)).astype(bool)) 
-        zeros_2 = torch.tensor(np.zeros((num_joints, (num_joints + num_vertices))).astype(bool)) 
-        adjacency_indices = torch.load('./src/modeling/data/smpl_431_adjmat_indices.pt') # Note: Authors MIT licensed this pt data
+        zeros_2 = torch.tensor(np.zeros((num_joints, (num_joints + num_vertices))).astype(bool))
+
+        # Note: Authors licensed the repo, along with links to their data and checkpoints as MIT 
+        adjacency_indices = torch.load('./src/modeling/data/smpl_431_adjmat_indices.pt')
         adjacency_matrix_value = torch.load('./src/modeling/data/smpl_431_adjmat_values.pt')
         adjacency_matrix_size = torch.load('./src/modeling/data/smpl_431_adjmat_size.pt')
         adjacency_matrix = torch.sparse_coo_tensor(adjacency_indices, adjacency_matrix_value, size=adjacency_matrix_size).to_dense()
@@ -131,11 +134,13 @@ class FastMETRO_Body_Network(nn.Module):
         # intermediate-to-fine mesh upsampling
 
         out = {}
+        out['pred_3d_coordinates'] = pred_3d_coordinates
         out['pred_cam'] = pred_cam
         out['pred_3d_joints'] = pred_3d_joints
         out['pred_3d_vertices_coarse'] = pred_3d_vertices_coarse
         out['pred_3d_vertices_intermediate'] = pred_3d_vertices_intermediate
-        out['pred_3d_vertices_fine'] = None
+        # Uses SMPL .faces to help upsample, so no thank you
+        #out['pred_3d_vertices_fine'] = None
 
         return out
 
