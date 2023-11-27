@@ -45,5 +45,4 @@ RUN /bin/bash -c "source activate fastmetro && pip install ./manopth/."
 # docker build -t fastmetro .
 
 # Run
-# docker run -it -v $PWD/models:/FastMETRO/models -v $PWD/images:/FastMETRO/images fastmetro bash
-
+# docker run --gpus all -it -v $PWD/models:/FastMETRO/models -v $PWD/images:/FastMETRO/images fastmetro bash
