@@ -4,6 +4,7 @@
 # Licensed under the MIT license.
 # ----------------------------------------------------------------------------------------------
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
-from .modeling_fastmetro import (FastMETRO_Body_Network, FastMETRO_Hand_Network)
+from .modeling_fastmetro import (FastMETRO_Hand_Network)
+from .modeling_xyz_fastmetro import (FastMETRO_Body_Network) # SMPL-less, just return X,Y,Z points

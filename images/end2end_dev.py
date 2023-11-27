@@ -1,5 +1,5 @@
-# Modified to serve vertices only
-
+# Modified to serve X,Y, Z vertices only
+#
 # ----------------------------------------------------------------------------------------------
 # FastMETRO Official Code
 # Copyright (c) POSTECH Algorithmic Machine Intelligence Lab. (P-AMI Lab.) All Rights Reserved 
@@ -24,7 +24,6 @@ import cv2
 from PIL import Image
 from torchvision import transforms
 from src.modeling.model import FastMETRO_Body_Network as FastMETRO_Network
-from src.modeling._smpl import SMPL, Mesh
 from src.modeling.hrnet.hrnet_cls_net_featmaps import get_cls_net
 from src.modeling.hrnet.config import config as hrnet_config
 from src.modeling.hrnet.config import update_config as hrnet_update_config
@@ -104,8 +103,6 @@ def parse_args():
                         help="cuda or cpu")
     parser.add_argument('--seed', type=int, default=88, 
                         help="random seed for initialization.")
-    parser.add_argument("--use_opendr_renderer", default=False, action='store_true',) 
-
 
     args = parser.parse_args()
     return args
@@ -123,9 +120,6 @@ def main(args):
     logger = setup_logger("FastMETRO Inference", args.output_dir, 0)
     set_seed(args.seed, args.num_gpus)
     logger.info("Using {} GPUs".format(args.num_gpus))
-
-    # Mesh and SMPL utils
-    mesh_sampler = Mesh()
 
     # Load pretrained model    
     logger.info("Inference: Loading from checkpoint {}".format(args.resume_checkpoint))
@@ -150,7 +144,7 @@ def main(args):
         else:
             assert False, "The CNN backbone name is not valid"
 
-        _FastMETRO_Network = FastMETRO_Network(args, backbone, mesh_sampler)
+        _FastMETRO_Network = FastMETRO_Network(args, backbone)
         # number of parameters
         overall_params = sum(p.numel() for p in _FastMETRO_Network.parameters() if p.requires_grad)
         backbone_params = sum(p.numel() for p in backbone.parameters() if p.requires_grad)
