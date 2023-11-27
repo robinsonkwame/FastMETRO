@@ -9,6 +9,13 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
     bash Miniconda3-latest-Linux-x86_64.sh -b -p /miniconda3 && \
     rm Miniconda3-latest-Linux-x86_64.sh
 
+# For opencv we install required libraries
+ENV TZ=America/New_York
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -y \
+    libgl1 \
+    libgtk2.0-0
+
 # Add conda and python to PATH
 ENV PATH="/miniconda3/bin:${PATH}"
 
@@ -21,8 +28,9 @@ COPY environment.yml environment.yml
 RUN /bin/bash -c "conda env create -f environment.yml"
 
 # Clone the FastMETRO repository and build it
-# note: the prior environment.yml covers the reqiurements.txt
-RUN git clone --recursive https://github.com/postech-ami/FastMETRO.git
+# note: the prior environment.yml covers the requirements.txt
+# MIT License
+RUN git clone --recursive https://github.com/robinsonkwame/FastMETRO.git
 
 # Set the working directory to FastMETRO
 WORKDIR FastMETRO
@@ -32,14 +40,6 @@ RUN /bin/bash -c "source activate fastmetro && python setup.py build develop"
 
 # Install manopth (GPL)
 RUN /bin/bash -c "source activate fastmetro && pip install ./manopth/."
-
-# For opencv we install required libraries
-# Note: ideally we'd move this up but this saves time re-buildling this image
-ENV TZ=America/New_York
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get install -y \
-    libgl1 \
-    libgtk2.0-0
 
 # Build 
 # docker build -t fastmetro .
