@@ -8,18 +8,10 @@ import torch
 from PIL import Image
 from torchvision import transforms
 import torchvision.models as models
-## TODO -----------------------------------------------------
-#
-# move this block into a util, and fast metro file, see what Cog requirements are
 from modeling_xyz_fastmetro import FastMETRO_Body_Network as FastMETRO_Network
 from hrnet_cls_net_featmaps import get_cls_net
 from default import update_config as hrnet_update_config
 from default import _C as hrnet_config
-# from src.modeling.model.modeling_xyz_fastmetro import FastMETRO_Body_Network as FastMETRO_Network
-# from src.modeling.hrnet.hrnet_cls_net_featmaps import get_cls_net
-# from src.modeling.hrnet.config import config as hrnet_config
-# from src.modeling.hrnet.config import update_config as hrnet_update_config
-# ------------------------------------------------------------
 import numpy as np
 import os
 import sys
