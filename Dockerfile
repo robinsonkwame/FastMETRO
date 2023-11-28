@@ -29,8 +29,9 @@ RUN /bin/bash -c "conda env create -f environment.yml"
 
 # Clone the FastMETRO repository and build it
 # note: the prior environment.yml covers the requirements.txt
-# MIT License
-RUN git clone --recursive https://github.com/robinsonkwame/FastMETRO.git && echo "new repo 3"
+#
+# Heavily modified from MIT Licensed github.com/postech-ami/FastMETRO/
+RUN git clone --recursive https://github.com/robinsonkwame/FastMETRO.git && echo 124
 
 # Set the working directory to FastMETRO
 WORKDIR FastMETRO
