@@ -226,8 +226,8 @@ def main(args):
     else:
         # init ImageNet pre-trained backbone model
         if args.arch == 'hrnet-w64':
-            hrnet_yaml = 'models/hrnet/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml'
-            hrnet_checkpoint = 'models/hrnet/hrnetv2_w64_imagenet_pretrained.pth'
+            hrnet_yaml = 'fastmetro/models/hrnet/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml'
+            hrnet_checkpoint = 'fastmetro/models/hrnet/hrnetv2_w64_imagenet_pretrained.pth'
             hrnet_update_config(hrnet_config, hrnet_yaml)
             backbone = get_cls_net(hrnet_config, pretrained=hrnet_checkpoint)
             logger.info('=> loading hrnet-v2-w64 model')
