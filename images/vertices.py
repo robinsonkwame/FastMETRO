@@ -8,14 +8,10 @@ import torch
 from PIL import Image
 from torchvision import transforms
 import torchvision.models as models
-## TODO -----------------------------------------------------
-#
-# move this block into a util, and fast metro file, see what Cog requirements are
-from src.modeling.model.modeling_xyz_fastmetro import FastMETRO_Body_Network as FastMETRO_Network
-from src.modeling.hrnet.hrnet_cls_net_featmaps import get_cls_net
-from src.modeling.hrnet.config import config as hrnet_config
-from src.modeling.hrnet.config import update_config as hrnet_update_config
-# ------------------------------------------------------------
+from modeling_xyz_fastmetro import FastMETRO_Body_Network as FastMETRO_Network
+from hrnet_cls_net_featmaps import get_cls_net
+from default import update_config as hrnet_update_config
+from default import _C as hrnet_config
 import numpy as np
 import os
 import sys
@@ -230,8 +226,8 @@ def main(args):
     else:
         # init ImageNet pre-trained backbone model
         if args.arch == 'hrnet-w64':
-            hrnet_yaml = 'models/hrnet/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml'
-            hrnet_checkpoint = 'models/hrnet/hrnetv2_w64_imagenet_pretrained.pth'
+            hrnet_yaml = 'fastmetro/models/hrnet/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml'
+            hrnet_checkpoint = 'fastmetro/models/hrnet/hrnetv2_w64_imagenet_pretrained.pth'
             hrnet_update_config(hrnet_config, hrnet_yaml)
             backbone = get_cls_net(hrnet_config, pretrained=hrnet_checkpoint)
             logger.info('=> loading hrnet-v2-w64 model')
