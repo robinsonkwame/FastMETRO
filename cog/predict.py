@@ -36,15 +36,8 @@ class Predictor(BasePredictor):
     transform_visualize = transforms.Compose([transforms.Resize(224),
                                               transforms.CenterCrop(224),
                                               transforms.ToTensor()])    
-    def setup(self):
-        # So this setup is cobbled together from a Dockerized version that I made
-        # to prove that FastMETRO could be containerized and independent of SMPL
 
-        # This means there's a lot of cruft here that is difficult to parse. But
-        # I do try to organize it into steps
-
-        # Step 1: Define default arguments
-
+    def parse_default_args(self):
         parser = argparse.ArgumentParser()
         #########################################################
         # Data related arguments
@@ -81,8 +74,62 @@ class Predictor(BasePredictor):
         parser.add_argument('--seed', type=int, default=88, 
                             help="random seed for initialization.")
 
-        self.args = parser.parse_args()
-        #self.model = torch.load("./weights.pth")
+        return parser.parse_args()
+
+    def setup(self):
+        # So this setup is cobbled together from a Dockerized version that I made
+        # to prove that FastMETRO could be containerized and independent of SMPL
+
+        # This means there's a lot of cruft here that is difficult to parse. But
+        # I do try to organize it into steps
+
+        # Step 1: Define default arguments
+        self.args = self.parse_default_args()
+        args = self.args # for easier copypasta of code
+        
+        # Step 2: Attach GPUS, load FastMETRO network
+        args.num_gpus = int(os.environ['WORLD_SIZE']) if 'WORLD_SIZE' in os.environ else 1
+        args.distributed = args.num_gpus > 1
+        args.device = torch.device(args.device)
+
+        # Load pretrained model    
+        logging.info("Inference: Loading from checkpoint {}".format(args.resume_checkpoint))
+        if (args.resume_checkpoint != None) and (args.resume_checkpoint != 'None') and ('state_dict' not in args.resume_checkpoint):
+            # if only run eval, load checkpoint
+            logging.info("Evaluation: Loading from checkpoint {}".format(args.resume_checkpoint))
+            _FastMETRO_Network = torch.load(args.resume_checkpoint)
+            logging.info("(... must work w pred 3d joints and 3d vertices)".format(args.resume_checkpoint))
+        else:
+            # init ImageNet pre-trained backbone model
+            if args.arch == 'hrnet-w64':
+                hrnet_yaml = 'models/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml'
+                hrnet_checkpoint = 'models/hrnetv2_w64_imagenet_pretrained.pth'
+                hrnet_update_config(hrnet_config, hrnet_yaml)
+                backbone = get_cls_net(hrnet_config, pretrained=hrnet_checkpoint)
+                logging.info('=> loading hrnet-v2-w64 model')
+            else:
+                assert False, "The CNN backbone name is not valid"
+
+            _FastMETRO_Network = FastMETRO_Network(args, backbone)
+            # number of parameters
+            overall_params = sum(p.numel() for p in _FastMETRO_Network.parameters() if p.requires_grad)
+            backbone_params = sum(p.numel() for p in backbone.parameters() if p.requires_grad)
+            transformer_params = overall_params - backbone_params
+            logging.info('Number of CNN Backbone learnable parameters: {}'.format(backbone_params))
+            logging.info('Number of Transformer Encoder-Decoder learnable parameters: {}'.format(transformer_params))
+            logging.info('Number of Overall learnable parameters: {}'.format(overall_params))
+
+            if (args.resume_checkpoint != None) and (args.resume_checkpoint != 'None'):
+                # for fine-tuning or resume training or inference, load weights from checkpoint
+                logging.info("Loading state dict from checkpoint {}".format(args.resume_checkpoint))
+                cpu_device = torch.device('cpu')
+                state_dict = torch.load(args.resume_checkpoint, map_location=cpu_device)
+                _FastMETRO_Network.load_state_dict(state_dict, strict=False)
+                del state_dict
+
+        self.fastmetro = _FastMETRO_Network.to(args.device)
+
+        logging.warn(f"we laoded fast metro!")
 
     # The arguments and types the model takes as input
     def predict(self,

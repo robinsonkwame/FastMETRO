@@ -82,9 +82,9 @@ class FastMETRO_Body_Network(nn.Module):
         zeros_2 = torch.tensor(np.zeros((num_joints, (num_joints + num_vertices))).astype(bool))
 
         # Note: Authors licensed the repo, along with links to their data and checkpoints as MIT 
-        adjacency_indices = torch.load('./src/modeling/data/smpl_431_adjmat_indices.pt')
-        adjacency_matrix_value = torch.load('./src/modeling/data/smpl_431_adjmat_values.pt')
-        adjacency_matrix_size = torch.load('./src/modeling/data/smpl_431_adjmat_size.pt')
+        adjacency_indices = torch.load('models/smpl_431_adjmat_indices.pt')
+        adjacency_matrix_value = torch.load('models/smpl_431_adjmat_values.pt')
+        adjacency_matrix_size = torch.load('models/smpl_431_adjmat_size.pt')
         adjacency_matrix = torch.sparse_coo_tensor(adjacency_indices, adjacency_matrix_value, size=adjacency_matrix_size).to_dense()
         temp_mask_1 = (adjacency_matrix == 0)
         temp_mask_2 = torch.cat([zeros_1, temp_mask_1], dim=1)
