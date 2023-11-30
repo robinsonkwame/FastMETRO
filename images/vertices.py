@@ -7,11 +7,10 @@ import argparse
 import torch
 from PIL import Image
 from torchvision import transforms
-import torchvision.models as models
-from modeling_xyz_fastmetro import FastMETRO_Body_Network as FastMETRO_Network
-from hrnet_cls_net_featmaps import get_cls_net
-from default import update_config as hrnet_update_config
-from default import _C as hrnet_config
+from images.utils.modeling_xyz_fastmetro import FastMETRO_Body_Network as FastMETRO_Network
+from images.utils.hrnet_cls_net_featmaps import get_cls_net
+from images.utils.default import update_config as hrnet_update_config
+from images.utils.default import _C as hrnet_config
 import numpy as np
 import os
 import sys
@@ -197,8 +196,9 @@ def run_inference(args, image_list, FastMETRO_model):
 
             # return these two matrices
             logger.info(
-                out['pred_3d_joints'].shape,
-                out['pred_3d_vertices_coarse'].shape
+                # out['pred_3d_joints'].shape,
+                # out['pred_3d_vertices_coarse'].shape
+                "we'd return 3d points in .xyz format"
             )
     
     logger.info("The inference completed successfully. Finalizing run...")
@@ -226,16 +226,11 @@ def main(args):
     else:
         # init ImageNet pre-trained backbone model
         if args.arch == 'hrnet-w64':
-            hrnet_yaml = 'fastmetro/models/hrnet/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml'
-            hrnet_checkpoint = 'fastmetro/models/hrnet/hrnetv2_w64_imagenet_pretrained.pth'
+            hrnet_yaml = '/FastMETRO/images/models/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml'
+            hrnet_checkpoint = '/FastMETRO/images/models/hrnetv2_w64_imagenet_pretrained.pth'
             hrnet_update_config(hrnet_config, hrnet_yaml)
             backbone = get_cls_net(hrnet_config, pretrained=hrnet_checkpoint)
             logger.info('=> loading hrnet-v2-w64 model')
-        elif args.arch == 'resnet50':
-            logger.info("=> using pre-trained model '{}'".format(args.arch))
-            backbone = models.__dict__[args.arch](pretrained=True)
-            # remove the last fc layer
-            backbone = torch.nn.Sequential(*list(backbone.children())[:-2])
         else:
             assert False, "The CNN backbone name is not valid"
 
