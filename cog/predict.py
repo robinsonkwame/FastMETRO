@@ -129,15 +129,23 @@ class Predictor(BasePredictor):
 
         self.fastmetro = _FastMETRO_Network.to(args.device)
 
-        logging.warn(f"we laoded fast metro!")
-
     # The arguments and types the model takes as input
     def predict(self,
           image: Path = Input(description="Grayscale input image")
     ) -> str:
         """Run a single prediction on the model"""
-        logging.warn(f"{str(self.args)}")
-        return torch.__version__
+        img = Image.open(image) # for easier copypasta
+        img_tensor = self.transform(img)
+        img_visual = self.transform_visualize(img)
+
+        batch_imgs = torch.unsqueeze(img_tensor, 0).cuda()
+        batch_visual_imgs = torch.unsqueeze(img_visual, 0).cuda()
+        
+        # forward-pass
+        out = self.fastmetro(batch_imgs)
+
+        logging.warn(f"{str(out['pred_3d_vertices_coarse'].shape)}")
+        return "we'd return 3d points in .xyz format"
 
 # # ---------------------------------------------------------------
 # # Inference script to serve vertices from MIT licensed checkpoint
