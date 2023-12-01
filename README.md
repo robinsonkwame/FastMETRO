@@ -4,6 +4,7 @@
 - Conatainerizes the results for an easy to use service; can be instantiated with [Cog](https://github.com/replicate/cog),
 
 ```
+./fetch_and_archive.sh # fetch weights
 cd cog
 cog predict -i image=@3dpw_test1.jpg # where 3dpw_test1.jpg is a test jpg image
 ```
