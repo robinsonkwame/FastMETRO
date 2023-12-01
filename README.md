@@ -34,13 +34,6 @@ Transformer encoder architectures have recently achieved state-of-the-art result
 
 ---
 
-## Installation
-We provide two ways to install conda environments depending on CUDA versions. 
-
-Please check [Installation.md](./docs/Installation.md) for more information.
-
----
-
 ## Download
 We provide guidelines to download pre-trained models and datasets. 
 
@@ -57,43 +50,11 @@ Please check [Download.md](./docs/Download.md) for more information.
 | FastMETRO-L-H64                     | 3DPW      | 44.6     | [Download](https://drive.google.com/u/2/uc?id=19Nc-KyluAB4UmY70HoBvIRqwRFVy4jQB&export=download&confirm=t)        |
 | FastMETRO-L-H64                     | FreiHAND  | 6.5      | [Download](https://drive.google.com/u/2/uc?id=1u6dr0E1w15IBmstcFaihr6r-DHKFWuw1&export=download&confirm=t)        |
 
-
-### (Parametric) FastMETRO with an optional SMPL parameter regressor
-| Model           | Dataset   | PA-MPJPE | Link            |
-| --------------- | --------- | -------- | --------------- |
-| FastMETRO-L-H64 | Human3.6M | 36.1     | [Download](https://drive.google.com/u/2/uc?id=1cx2siY3Ecjo8j036j9QCthf9agvYSDRK&export=download&confirm=t)        |
-| FastMETRO-L-H64 | 3DPW      | 51.0     | [Download](https://drive.google.com/u/2/uc?id=16iSWbk9SQrlUDpWwD6pLknv2_4S5_XBS&export=download&confirm=t)        |
-
 - Model checkpoints were obtained in [Conda Environment (CUDA 11.1)](./docs/Installation.md)
-- To use SMPL parameter regressor, you need to set `--use_smpl_param_regressor` as `True`
 
 ---
 
-## Demo
-We provide guidelines to run end-to-end inference on test images.
-
-Please check [Demo.md](./docs/Demo.md) for more information.
-
----
-
-## Experiments
-We provide guidelines to train and evaluate our model on Human3.6M, 3DPW and FreiHAND. 
-
-Please check [Experiments.md](./docs/Experiments.md) for more information.
-
----
-
-## Results
-This repository provides several experimental results:
-
-![table2](./assets/table2.png)
-![figure1](./assets/figure1.png)
-![figure4](./assets/figure4.png)
-![smpl_regressor](./assets/smpl_param_regressor.png)
-
----
-
-## Acknowledgments
+## FastMETRO Acknowledgments
 This work was supported by Institute of Information & communications Technology Planning & Evaluation (IITP) grant funded by the Korea government (MSIT) (No. 2022-0-00290, Visual Intelligence for Space-Time Understanding and Generation based on Multi-layered Visual Common Sense; and No. 2019-0-01906, Artificial Intelligence Graduate School Program (POSTECH)).
 
 Our repository is modified and adapted from these amazing repositories. If you find their work useful for your research, please also consider citing them:
@@ -111,17 +72,11 @@ Our repository is modified and adapted from these amazing repositories. If you f
 ## License
 This research code is released under the MIT license. Please see [LICENSE](./LICENSE) for more information.
 
-SMPL and MANO models are subject to **Software Copyright License for non-commercial scientific research purposes**. Please see [SMPL-Model License](https://smpl.is.tue.mpg.de/modellicense.html) and [MANO License](https://mano.is.tue.mpg.de/license.html) for more information.
+SMPL and MANO models are subject to **Software Copyright License for non-commercial scientific research purposes**. Please see [SMPL-Model License](https://smpl.is.tue.mpg.de/modellicense.html) and [MANO License](https://mano.is.tue.mpg.de/license.html) for more information. 
 
 We use submodules from third party ([hassony2/manopth](https://github.com/hassony2/manopth)). Please see [NOTICE](./NOTICE.md) for more information.
 
----
-
-## Contact
-Junhyeong Cho (jhcho99.cs@gmail.com)
-
-FastMETRO (fastmetro.official@gmail.com)
-
+This fork does not use SMPL models. It uses [Manopath](https://github.com/hassony2/manopth) but NOT the MANO pickle related datastructures, which fall under a seperate MANO specific license (otherwise, the repo is GPL).
 ---
 
 ## Citation
