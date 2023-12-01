@@ -1,4 +1,16 @@
-# [ECCV'22] Fast Mesh Transformer
+# FastMETRO XYZ Point Transformer
+
+- Modifies [Paper](https://arxiv.org/abs/2207.13820) | [Project Page](https://fastmetro.github.io/) | [Model Checkpoint](#model_checkpoint) to only use their checkpoints and eliminate SMPL dervied upsampling mesh logic. MIT licensed.
+- Conatainerizes the results for an easy to use service; can be instantiated with [Cog](https://github.com/replicate/cog),
+
+```
+cd cog
+cog predict -i image=@3dpw_test1.jpg # where 3dpw_test1.jpg is a test jpg image
+```
+
+contact: csdtdevelopers@umich.edu
+
+## Packaged and modified [ECCV'22] Fast Mesh Transformer
 ### [Paper](https://arxiv.org/abs/2207.13820) | [Project Page](https://fastmetro.github.io/) | [Model Checkpoint](#model_checkpoint)
 
 - This is the official PyTorch implementation of [Cross-Attention of Disentangled Modalities for 3D Human Mesh Recovery with Transformers](https://arxiv.org/abs/2207.13820) (ECCV 2022).
