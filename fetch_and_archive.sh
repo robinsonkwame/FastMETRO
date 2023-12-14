@@ -5,28 +5,16 @@ export REPO_DIR=$PWD
 MODELS_DIR=$REPO_DIR/cog/models
 
 if [ ! -d "$MODELS_DIR" ]; then
-    #mkdir -p $REPO_DIR/models/hrnet  # pre-trained models
-    #mkdir -p $REPO_DIR/models/fastmetro_checkpoint  # model checkpoints
-    #mkdir -p $REPO_DIR/datasets  # datasets
+    fileid="1Np8SAEFEou2HcfDYH7b1a4rjLI1GnwVQ"
+    filename="PointHMR-HR32-Human3.6M_state_dict.bin"
 
-    # Set blob URL
-    BLOB='https://datarelease.blob.core.windows.net/metro'
+    # Fetch the confirmation token by querying the download page
+    confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate "https://drive.google.com/uc?export=download&id=${fileid}" -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')
 
-    # Download the ImageNet pre-trained HRNet models 
-    wget -nc $BLOB/models/hrnetv2_w64_imagenet_pretrained.pth -O $REPO_DIR/cog/models/hrnetv2_w64_imagenet_pretrained.pth
-    wget -nc $BLOB/models/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml -O $REPO_DIR/cog/models/cls_hrnet_w64_sgd_lr5e-2_wd1e-4_bs32_x100.yaml
+    # Use the confirmation token to complete the download
+    wget --load-cookies /tmp/cookies.txt "https://drive.google.com/uc?export=download&confirm=${confirm}&id=${fileid}" -O ${filename} && rm -rf /tmp/cookies.txt
 
-    # Download FastMETRO-L-H64 Model
-    wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1WU6q27SV7YNGCSBLypB5IGFVWMnL26io' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1WU6q27SV7YNGCSBLypB5IGFVWMnL26io" -O $REPO_DIR/cog/models/FastMETRO-L-H64_h36m_state_dict.bin && rm -rf /tmp/cookies.txt
-
-    # Download FastMETRO Adjmat indices, size, values (licensed MIT)
-    wget https://github.com/postech-ami/FastMETRO/raw/main/src/modeling/data/smpl_431_adjmat_indices.pt -O $REPO_DIR/cog/models/smpl_431_adjmat_indices.pt
-
-    wget https://github.com/postech-ami/FastMETRO/raw/main/src/modeling/data/smpl_431_adjmat_size.pt -O $REPO_DIR/cog/models/smpl_431_adjmat_size.pt
-
-    wget https://github.com/postech-ami/FastMETRO/raw/main/src/modeling/data/smpl_431_adjmat_indices.pt -O $REPO_DIR/cog/models/smpl_431_adjmat_indices.pt
-
-    echo "Models downloaded successfully. Run cog build -t fastmetro to build!"
+    echo "Checkpoint downloaded successfully. Run cog build -t image2mesh to build!"
 else
     echo "Models directory already exists. Skipping download."
 fi
