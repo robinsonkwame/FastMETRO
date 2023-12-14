@@ -41,7 +41,7 @@ class Predictor(BasePredictor):
         )
         logger.info(f"Done!")
 
-    def run_inference(args, image_list, Graphormer_model):
+    def run_inference(args, image_list):
         self.Graphormer_model.eval()
 
         with torch.no_grad():
@@ -60,7 +60,7 @@ class Predictor(BasePredictor):
                     batch_imgs = torch.unsqueeze(img_tensor, 0).cuda()
                     batch_visual_imgs = torch.unsqueeze(img_visual, 0).cuda()
                     # forward-pass
-                    outputs = Graphormer_model(batch_imgs)
+                    outputs = self.Graphormer_model(batch_imgs)
 
                     pred_camera, pred_3d_joints, pred_vertices_sub2, pred_vertices_sub, pred_vertices, heat_map = outputs
 
