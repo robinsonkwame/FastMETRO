@@ -2,7 +2,7 @@
 
 # Define directories
 export REPO_DIR=$PWD
-MODELS_DIR=$REPO_DIR/cog/models
+MODELS_DIR=$REPO_DIR/cog/model
 
 if [ ! -d "$MODELS_DIR" ]; then
     fileid="1Np8SAEFEou2HcfDYH7b1a4rjLI1GnwVQ"

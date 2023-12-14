@@ -2,5 +2,6 @@ build:
   gpu: true
   cuda: "11.1.1"
   python_version: "3.8"
-  python_requirements: requirements.txt
+  python_packages:
+      - "torch==1.8.1"
 predict: "predict.py:Predictor"
